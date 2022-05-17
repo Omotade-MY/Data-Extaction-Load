@@ -1,4 +1,4 @@
-# Data-Extaction-Load
+# Data-Extraction-Load
 
 Data Extraction and Load is my first beginner project in the are of data engineering. This project is a part of the Borderless Incubator project on forecasting cryptocurrency price. The whole project consist of four teams and I lead the data engineering team.\
 The data engineering team was tasked to scrape cryptocurrency data from different live source and store in a database. Our work flow is to extract, clean and load the data into a cloud base database system.\
