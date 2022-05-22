@@ -12,16 +12,18 @@ import crud
 
 
 print('\nScheduling Start >>> \n Loading data into database every one hour \
-      \n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-# start time is in minutes
+      \n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
-t = 90 # wait time is 1 hr :60 minutes
+
+t = 3600 # wait time is 1 hr :60 minutes
 while True:
     
     crud.load_data()
     tm = time.localtime(time.time())
-    # time sleep to delay the execution for an hour
+    
+    
     print("\nPrevoius Load Was at:> {}:{}".format(tm.tm_hour,tm.tm_min))
     print('Next load in an hour...')
     
+    # time sleep to delay the execution for an hour
     time.sleep(t)
