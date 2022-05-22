@@ -10,10 +10,10 @@ from sqlalchemy.orm import sessionmaker
 from tqdm.std import tqdm
 from extract import extract_coindata
 from models import Crypto
-from config import engine
+from config import engine, cloud_engine
 
 coindata = extract_coindata()
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=cloud_engine)
 
 def load_data(data = coindata):
     s = Session()
@@ -22,5 +22,6 @@ def load_data(data = coindata):
         row = Crypto(**coin)
         s.add(row)
         s.commit()
+    s.close()
     print('Batch Load Executed!!!')
         
