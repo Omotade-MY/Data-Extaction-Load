@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import csv
 import os
 
+
 def scrape():
     data = requests.get('https://www.coingecko.com/')
     soup = BeautifulSoup(data.content, 'html.parser')
@@ -100,7 +101,7 @@ def extract_coindata():
         start = stop
         
         
-        time = now.strftime('%Y/%m/%d/%H:%M')
+        time = now.strftime('%Y/%m/%d %H:%M')
         info = {'Time':time,'Price':current,
                 '1h':_1h, '24h':_24h, '7d':_7d,
                 '24h Volume': volume,
