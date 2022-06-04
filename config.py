@@ -7,7 +7,7 @@ Created on Tue May 17 22:32:11 2022
 from sqlalchemy import create_engine
 from models import Base
 
-LOCAL_DATABASE_URL = "postgres+psycopg2://postgres:udkhul bisalaam@localhost:5432/Cryptocurrency"
+LOCAL_DATABASE_URL = "postgres+psycopg2://postgres:udkhulbisalaam@localhost:5432/Cryptocurrency"
 
 hostname = "borderless-instance.cyjsfpjxjrtj.us-east-1.rds.amazonaws.com"
 password = "udkhulbisalaam"

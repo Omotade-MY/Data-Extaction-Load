@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 import csv
 import os
 
-
 def scrape():
     data = requests.get('https://www.coingecko.com/')
     soup = BeautifulSoup(data.content, 'html.parser')
@@ -35,17 +34,18 @@ def get_coins(info={}):
             
         if name is not None:
             name = name.strip()
-            info.update({'Coin':name})
+            info.update({'Symbol':name})
             
        
         coin_info.append(info)
 
     return coin_info
 
-def extract_coindata(coin_info=get_coins()):
+def extract_coindata():
     """Extracts the current price, 24thVolume and MarketCap
     returns a list of dictionaries where each dictionary is for each coin"""
     
+    coin_info = get_coins()
     now = datetime.now()
     coinprices = cryptosoup.select('span.no-wrap')
 
@@ -57,6 +57,19 @@ def extract_coindata(coin_info=get_coins()):
 
             prices.append(coinprice)
     start = 0
+    
+    # select 1h
+    tag = "td.td-change1h.change1h.stat-percent.text-right.col-market"
+    _1hs = cryptosoup.select(tag)
+    
+    # select 24
+    tag = "td.td-change24h.change24h.stat-percent.text-right.col-market"
+    _24hs = cryptosoup.select(tag)
+    
+    # select 7d
+    tag = "td.td-change7d.change7d.stat-percent.text-right.col-market"
+    _7ds = cryptosoup.select(tag)
+    
     for i in range(len(prices)//3):
         stop = (i+1) * 3
 
@@ -66,14 +79,33 @@ def extract_coindata(coin_info=get_coins()):
         # get each categoy of prices on the page for each coin
         current = coin_prices[0]
         
+        # get 1h
+        _1h = _1hs[i].select('span')[0].text.strip()
+        
+        # get 24h
+        _24h = _24hs[i].select('span')[0].text.strip()
+        
+        # get 7d 
+        _7d = _7ds[i].select('span')[0].text.strip()
+        
+        # get 24h volume
+        volume = coin_prices[1]
+        
+        # get market cap
+        cap = coin_prices[2]
+        
+        
 
         # make sure the next start point picks up at the previous stop point
         start = stop
         
         
         time = now.strftime('%Y/%m/%d/%H:%M')
-        time = datetime.strptime(time, '%Y/%m/%d/%H:%M')
-        info = {'Time':time,'Price':current,'Website':'https://www.coingecko.com/'}
+        info = {'Time':time,'Price':current,
+                '1h':_1h, '24h':_24h, '7d':_7d,
+                '24h Volume': volume,
+                'MktCap': cap,
+                'Website':'https://www.coingecko.com/'}
         
         coin_info[i].update(info)
         
