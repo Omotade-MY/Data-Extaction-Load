@@ -15,7 +15,7 @@ print('\nScheduling Start >>> \n Loading data into database every one hour \
       \n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
 
-t = 3600 # wait time is 1 hr :60 minutes
+t = 3600 # wait time is 1 hr :60 minutes : 3600 seconds
 while True:
     
     crud.load_data()

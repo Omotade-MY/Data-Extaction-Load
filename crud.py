@@ -11,13 +11,13 @@ from tqdm.std import tqdm
 from extract import extract_coindata
 from models import Crypto
 from config import engine, cloud_engine
-#import datetime
+from datetime import datetime
 
 coindata = extract_coindata()
 Session = sessionmaker(bind=cloud_engine)
 
-def load_data(data):
-    #start = datetime.now()
+def load_data(data = coindata):
+    start = datetime.now()
     s = Session()
     cols = list(data[0].keys())
     for coin in tqdm(data, desc="Inserting data into {} table".format(Crypto.__tablename__)):
@@ -32,8 +32,8 @@ def load_data(data):
         #row = Crypto(**coin)
         s.execute(query)
         s.commit()
-    #stop = datetime.now()  
+    stop = datetime.now()  
     s.close()
-    #print("Total time: {} seconds".format(stop-start))
+    print("Total time: {} seconds".format(stop-start))
     print('Batch Load Executed!!!')
         
