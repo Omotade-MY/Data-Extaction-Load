@@ -24,4 +24,13 @@ class Crypto(Base):
     def __repr__(self):
         return "Crypto(CoinName: {}, Coin: {}, Time: {}, Price: {}, Website: {})"\
         .format(self.CoinName, self.Coin, self.Time, self.Price, self.Website)
+        
+        
+def rename_cols(oldnames, newnames, eng):
+    con = eng.connect()
+    for oldname, newname in zip(oldnames,newnames):
+        
+        query = '''ALTER TABLE public."CryptoPrice" RENAME COLUMN "{}" To "{}"'''.format(oldname, newname)
+        con.execute(query)
+    print('Column {} has been renamed to {}\nStatus: Succesful!'.format(oldnames, newnames))
     

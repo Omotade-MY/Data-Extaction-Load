@@ -23,5 +23,5 @@ def reset_database():
     
 oldnames = ['_1h','_24h','_7d','_24h_Volume']
 newnames = ['1h','24h','7d','24h Volume']
-rename_cols(oldnames, newnames, engine)
+#rename_cols(oldnames, newnames, engine)
     
