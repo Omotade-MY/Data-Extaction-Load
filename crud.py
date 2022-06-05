@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from tqdm.std import tqdm
 from extract import extract_coindata
 from models import Crypto
-from config import engine, cloud_engine
+from config import cloud_engine
 from datetime import datetime
 
 coindata = extract_coindata()
@@ -34,6 +34,7 @@ def load_data(data = coindata):
         s.commit()
     stop = datetime.now()  
     s.close()
-    print("Total time: {} seconds".format(stop-start))
+
     print('Batch Load Executed!!!')
+    print("Total time: {} seconds".format(stop-start))
         

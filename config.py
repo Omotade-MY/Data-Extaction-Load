@@ -6,11 +6,10 @@ Created on Tue May 17 22:32:11 2022
 """
 from sqlalchemy import create_engine
 from models import Base, rename_cols
-
+from auths import hostname, password
 LOCAL_DATABASE_URL = "postgres+psycopg2://postgres:udkhulbisalaam@localhost:5432/Cryptocurrency"
 
-hostname = "borderless-instance.cyjsfpjxjrtj.us-east-1.rds.amazonaws.com"
-password = "udkhulbisalaam"
+
 
 CLOUD_DATABASE_URL = "postgres+psycopg2://postgres:"+password+"@"+hostname+":5432/Cryptocurrency"
 
