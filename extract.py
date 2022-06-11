@@ -24,7 +24,7 @@ def get_coins(info={}):
     cryptosoup = scrape()
     coinnames = cryptosoup.select('a.d-lg-none.font-bold.tw-w-12')
     coin_info = []
-    for coin in coinnames:
+    for coin in coinnames[:5]:
         name = coin.text
         href = coin.get('href')
         
@@ -71,7 +71,7 @@ def extract_coindata():
     tag = "td.td-change7d.change7d.stat-percent.text-right.col-market"
     _7ds = cryptosoup.select(tag)
     
-    for i in range(len(prices)//3):
+    for i in range(5):
         stop = (i+1) * 3
 
         # Getting prices in groups of threes: This contain the current price, 24thvolume and Market cap
