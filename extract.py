@@ -7,113 +7,77 @@ Created on Mon May 16 19:54:44 2022
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
-import csv
+import pandas as pd
 import os
 
 
 def scrape():
-    data = requests.get('https://www.coingecko.com/')
+    data = requests.get('https://coinmarketcap.com/all/views/all/')
     soup = BeautifulSoup(data.content, 'html.parser')
     
     return soup
 
-def get_coins(info={}):
-    
-    global cryptosoup
-    
-    cryptosoup = scrape()
-    coinnames = cryptosoup.select('a.d-lg-none.font-bold.tw-w-12')
-    coin_info = []
-    for coin in coinnames[:5]:
-        name = coin.text
-        href = coin.get('href')
-        
-        if href is not None:
-            href = href.strip().split('/')
-            Name = href[-1].title()
-            info = {'CoinName':Name}
-            
-        if name is not None:
-            name = name.strip()
-            info.update({'Symbol':name})
-            
-       
-        coin_info.append(info)
-
-    return coin_info
-
 def extract_coindata():
     """Extracts the current price, 24thVolume and MarketCap
     returns a list of dictionaries where each dictionary is for each coin"""
+
+    # srape data from website
+    cryptosoup = scrape()
     
-    coin_info = get_coins()
+    # get current time after scraping
     now = datetime.now()
-    coinprices = cryptosoup.select('span.no-wrap')
-
-    prices = []
-    for price in coinprices:
-        coinprice = price.text
-        if coinprice is not None:
-            coinprice = coinprice.strip()
-
-            prices.append(coinprice)
-    start = 0
     
-    # select 1h
-    tag = "td.td-change1h.change1h.stat-percent.text-right.col-market"
-    _1hs = cryptosoup.select(tag)
+    # collecting infomation needed from webpage
+    table = cryptosoup.select('table')[2]
+    headpane = table.select('thead')[0]
+    body = table.select('tbody')[0]
+    columns = []
     
-    # select 24
-    tag = "td.td-change24h.change24h.stat-percent.text-right.col-market"
-    _24hs = cryptosoup.select(tag)
+    coin_info = []
+    heads = headpane.select('th')[1:-1]
+    for head in heads:
+        if heads.index(head) == 0:
+            col = 'CoinName'
+        else:
+            col = head.text.strip('% ')
+        columns.append(col)
     
-    # select 7d
-    tag = "td.td-change7d.change7d.stat-percent.text-right.col-market"
-    _7ds = cryptosoup.select(tag)
+    # select top 5 rows
+
+    rows = body.select('tr')[:5]
+    for r in rows:
+        row_vals = []
+        
+        row =  r.select('td')[1:-1]
+        
+        for i in range(len(row)):
+            val = row[i]
+            if i == 0:
+                val = val.select('a')[1].text
+            elif i == 2:
+                val = val.text.split('B')[1]
+            else:
+                val = val.text
+            col = columns[i]
     
-    for i in range(5):
-        stop = (i+1) * 3
-
-        # Getting prices in groups of threes: This contain the current price, 24thvolume and Market cap
-        coin_prices = prices[start:stop]
-
-        # get each categoy of prices on the page for each coin
-        current = coin_prices[0]
-        
-        # get 1h
-        _1h = _1hs[i].select('span')[0].text.strip()
-        
-        # get 24h
-        _24h = _24hs[i].select('span')[0].text.strip()
-        
-        # get 7d 
-        _7d = _7ds[i].select('span')[0].text.strip()
-        
-        # get 24h volume
-        volume = coin_prices[1]
-        
-        # get market cap
-        cap = coin_prices[2]
-        
-        
-
-        # make sure the next start point picks up at the previous stop point
-        start = stop
-        
-        
+            
+            row_vals.append(val)
         time = now.strftime('%Y/%m/%d %H:%M')
-        info = {'Time':time,'Price':current,
-                '1h':_1h, '24h':_24h, '7d':_7d,
-                '24h Volume': volume,
-                'MktCap': cap,
-                'Website':'https://www.coingecko.com/'}
         
-        coin_info[i].update(info)
+        # save the time and website of scraping
+        row_vals.insert(2,time)
+        row_vals.append('https://coinmarketcap.com/all/views/all/')
+        info = tuple(row_vals)
+        coin_info.append(info)
         
-    return coin_info
+    columns.insert(2,'Time')
+    columns.append('Website')
+    
+    return coin_info, columns
 
-def to_csv(columns, coindata):
 
+def to_csv(coindata, columns):
+    
     n = datetime.now()
     n = n.strftime('%H-%M')
     try:
@@ -121,8 +85,5 @@ def to_csv(columns, coindata):
     except FileExistsError:
         pass
     
-    path = './'+ n + '/crypto.csv'
-    with open(path, 'w', newline='') as fp:
-        dict_writer = csv.DictWriter(fp, columns)
-        dict_writer.writeheader()
-        dict_writer.writerows(coindata)
+    path = './'+ n + '/cryptocurrency.csv'
+    pd.DataFrame(coindata, columns=columns).to_csv(path, index=False)
