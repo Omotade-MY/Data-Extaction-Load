@@ -1,0 +1,6 @@
+CoinName,Symbol,Time,Market Cap,Price,Circulating Supply,Volume(24h),1h,24h,7d,Website
+Bitcoin,BTC,2022/06/18 20:29,"$349,448,098,788","$18,323.74","19,070,787 BTC","$32,035,279,811",-0.50%,-10.68%,-36.09%,https://coinmarketcap.com/all/views/all/
+Ethereum,ETH,2022/06/18 20:29,"$113,977,783,771",$940.25,"121,220,313 ETH","$15,485,986,467",-1.66%,-12.84%,-39.61%,https://coinmarketcap.com/all/views/all/
+Tether,USDT,2022/06/18 20:29,"$68,142,522,740",$0.9987,"68,230,995,597 USDT *","$47,916,417,966",0.00%,-0.02%,-0.04%,https://coinmarketcap.com/all/views/all/
+USD Coin,USDC,2022/06/18 20:29,"$55,323,828,129",$1.00,"55,302,758,433 USDC *","$5,472,213,974",0.01%,0.01%,0.04%,https://coinmarketcap.com/all/views/all/
+BNB,BNB,2022/06/18 20:29,"$31,285,346,862",$191.61,"163,276,975 BNB *","$1,250,096,938",-0.96%,-11.00%,-29.83%,https://coinmarketcap.com/all/views/all/
