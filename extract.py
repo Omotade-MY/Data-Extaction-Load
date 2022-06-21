@@ -76,6 +76,7 @@ def extract_coindata():
     return coin_info, columns
 
 
+
 def to_csv(coindata, columns):
     
     n = datetime.now()
@@ -87,3 +88,4 @@ def to_csv(coindata, columns):
     
     path = './'+ n + '/cryptocurrency.csv'
     pd.DataFrame(coindata, columns=columns).to_csv(path, index=False)
+

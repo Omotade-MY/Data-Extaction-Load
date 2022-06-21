@@ -6,31 +6,45 @@ Created on Tue May 17 22:29:48 2022
 """
 
 
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+import logging
 
+logger = logging.Logger('catch_all')
 
-Base = declarative_base()
-
-class Crypto(Base):
-    __tablename__ = 'CryptoPrice'
-    id = Column(Integer, primary_key=True)
-    CoinName = Column(String)
-    Coin = Column(String)
-    Time = Column(DateTime)
-    Price = Column(String)
-    Website = Column(String)
+def create_table(eng):
+    query = ''' CREATE TABLE IF NOT EXISTS Crypto (ID serial PRIMARY KEY,
+    CoinName VARCHAR (20) , Symbol VARCHAR (10), Time TIMESTAMP (40), Price VARCHAR (30),
+    "1h" VARCHAR (10), "24h" VARCHAR (10), "7d" VARCHAR (10), "Volume(24h)" VARCHAR (30),
+    "Circulating Supply" VARCHAR (40) , "Market Cap" VARCHAR (50),
+    Website VARCHAR(200))'''
     
-    def __repr__(self):
-        return "Crypto(CoinName: {}, Coin: {}, Time: {}, Price: {}, Website: {})"\
-        .format(self.CoinName, self.Coin, self.Time, self.Price, self.Website)
+    conn = eng.connect()
+    try:
+        conn.execute(query)
+        print('Table Created\nStatus: Successfull!!!')
+    except Exception as e:
+        logger.error(e, exc_info=True)
+        print("Could not create table")
         
+    finally:
+        conn.close()
+
+
+def drop_table(eng):
+    query = ''' DROP TABLE IF EXISTS Crypto'''
+    conn = eng.connect()
+    try:
+        conn.execute(query)
+        print('Table dropped\nStatus: Successfull!!!')
+    except Exception as e:
+        logger.error(e, exc_info=True)
+        print('Drop Table Failed')
         
-def rename_cols(oldnames, newnames, eng):
-    con = eng.connect()
-    for oldname, newname in zip(oldnames,newnames):
+    finally:
+        conn.close()
         
-        query = '''ALTER TABLE public."CryptoPrice" RENAME COLUMN "{}" To "{}"'''.format(oldname, newname)
-        con.execute(query)
-    print('Column {} has been renamed to {}\nStatus: Succesful!'.format(oldnames, newnames))
-    
+
+
+def reset_database(eng):
+    drop_table(eng)
+    create_table(eng)
